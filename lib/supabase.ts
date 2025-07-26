@@ -15,62 +15,63 @@ export const supabaseAdmin = createClient(
 export type Database = {
   public: {
     Tables: {
-      materias: {
+      usuarios: {
         Row: {
           id: string
-          codigo: string
+          email: string
           nombre: string
-          docente_id: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          codigo: string
-          nombre: string
-          docente_id?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          codigo?: string
-          nombre?: string
-          docente_id?: string | null
-          created_at?: string
-        }
-      }
-      clases: {
-        Row: {
-          id: string
-          materia_id: string
-          fecha: string
-          hora_inicio: string
-          hora_fin: string
-          aula: string | null
-          estado: 'programada' | 'cancelada'
+          apellido: string
+          rol: 'admin' | 'suscriptor' | 'docente'
+          telefono: string | null
+          avatar_url: string | null
           created_at: string
           updated_at: string
         }
         Insert: {
           id?: string
-          materia_id: string
-          fecha: string
-          hora_inicio: string
-          hora_fin: string
-          aula?: string | null
-          estado?: 'programada' | 'cancelada'
-          created_at?: string
-          updated_at?: string
+          email: string
+          nombre: string
+          apellido: string
+          rol?: 'admin' | 'suscriptor' | 'docente'
+          telefono?: string | null
+          avatar_url?: string | null
         }
         Update: {
           id?: string
-          materia_id?: string
-          fecha?: string
-          hora_inicio?: string
-          hora_fin?: string
-          aula?: string | null
-          estado?: 'programada' | 'cancelada'
-          created_at?: string
-          updated_at?: string
+          email?: string
+          nombre?: string
+          apellido?: string
+          rol?: 'admin' | 'suscriptor' | 'docente'
+          telefono?: string | null
+          avatar_url?: string | null
+        }
+      }
+      materias: {
+        Row: {
+          id: string
+          codigo: string
+          nombre: string
+          descripcion: string | null
+          creditos: number
+          docente_id: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          codigo: string
+          nombre: string
+          descripcion?: string | null
+          creditos?: number
+          docente_id?: string | null
+        }
+        Update: {
+          id?: string
+          codigo?: string
+          nombre?: string
+          descripcion?: string | null
+          creditos?: number
+          docente_id?: string | null
         }
       }
       aulas: {
@@ -78,31 +79,67 @@ export type Database = {
           id: string
           codigo: string
           nombre: string
-          capacidad: number
           ubicacion: string
+          capacidad: number
           equipamiento: string[] | null
-          activa: boolean
+          tipo: 'aula' | 'laboratorio' | 'auditorio' | 'sala_computacion'
+          estado: 'disponible' | 'mantenimiento' | 'ocupada'
           created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
           codigo: string
           nombre: string
-          capacidad: number
           ubicacion: string
+          capacidad?: number
           equipamiento?: string[] | null
-          activa?: boolean
-          created_at?: string
+          tipo?: 'aula' | 'laboratorio' | 'auditorio' | 'sala_computacion'
+          estado?: 'disponible' | 'mantenimiento' | 'ocupada'
         }
         Update: {
           id?: string
           codigo?: string
           nombre?: string
-          capacidad?: number
           ubicacion?: string
+          capacidad?: number
           equipamiento?: string[] | null
-          activa?: boolean
-          created_at?: string
+          tipo?: 'aula' | 'laboratorio' | 'auditorio' | 'sala_computacion'
+          estado?: 'disponible' | 'mantenimiento' | 'ocupada'
+        }
+      }
+      clases: {
+        Row: {
+          id: string
+          materia_id: string
+          aula_id: string | null
+          fecha: string
+          hora_inicio: string
+          hora_fin: string
+          estado: 'programada' | 'en_curso' | 'finalizada' | 'cancelada'
+          motivo_cancelacion: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          materia_id: string
+          aula_id?: string | null
+          fecha: string
+          hora_inicio: string
+          hora_fin: string
+          estado?: 'programada' | 'en_curso' | 'finalizada' | 'cancelada'
+          motivo_cancelacion?: string | null
+        }
+        Update: {
+          id?: string
+          materia_id?: string
+          aula_id?: string | null
+          fecha?: string
+          hora_inicio?: string
+          hora_fin?: string
+          estado?: 'programada' | 'en_curso' | 'finalizada' | 'cancelada'
+          motivo_cancelacion?: string | null
         }
       }
       suscripciones: {
@@ -113,14 +150,14 @@ export type Database = {
           alarma_minutos: number
           alarma_activa: boolean
           created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
           user_id: string
           materia_id: string
-          alarma_minutos: number
+          alarma_minutos?: number
           alarma_activa?: boolean
-          created_at?: string
         }
         Update: {
           id?: string
@@ -128,32 +165,120 @@ export type Database = {
           materia_id?: string
           alarma_minutos?: number
           alarma_activa?: boolean
-          created_at?: string
         }
       }
-      docentes: {
+      notificaciones: {
         Row: {
           id: string
-          nombre: string
-          email: string
-          telefono: string | null
+          user_id: string
+          clase_id: string | null
+          tipo: 'recordatorio' | 'cambio_aula' | 'cancelacion' | 'nueva_clase'
+          titulo: string
+          mensaje: string
+          leida: boolean
+          enviada: boolean
           created_at: string
         }
         Insert: {
           id?: string
-          nombre: string
-          email: string
-          telefono?: string | null
-          created_at?: string
+          user_id: string
+          clase_id?: string | null
+          tipo: 'recordatorio' | 'cambio_aula' | 'cancelacion' | 'nueva_clase'
+          titulo: string
+          mensaje: string
+          leida?: boolean
+          enviada?: boolean
         }
         Update: {
           id?: string
-          nombre?: string
-          email?: string
-          telefono?: string | null
-          created_at?: string
+          user_id?: string
+          clase_id?: string | null
+          tipo?: 'recordatorio' | 'cambio_aula' | 'cancelacion' | 'nueva_clase'
+          titulo?: string
+          mensaje?: string
+          leida?: boolean
+          enviada?: boolean
+        }
+      }
+      configuraciones_sistema: {
+        Row: {
+          id: string
+          clave: string
+          valor: string
+          descripcion: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          clave: string
+          valor: string
+          descripcion?: string | null
+        }
+        Update: {
+          id?: string
+          clave?: string
+          valor?: string
+          descripcion?: string | null
+        }
+      }
+    }
+    Views: {
+      clases_completas: {
+        Row: {
+          id: string
+          fecha: string
+          hora_inicio: string
+          hora_fin: string
+          estado: string
+          motivo_cancelacion: string | null
+          materia_id: string
+          materia_codigo: string
+          materia_nombre: string
+          aula_id: string | null
+          aula_codigo: string | null
+          aula_nombre: string | null
+          aula_ubicacion: string | null
+          aula_capacidad: number | null
+          docente_id: string | null
+          docente_nombre: string | null
+          docente_apellido: string | null
+          docente_email: string | null
+          created_at: string
+          updated_at: string
+        }
+      }
+      suscripciones_completas: {
+        Row: {
+          id: string
+          alarma_minutos: number
+          alarma_activa: boolean
+          created_at: string
+          user_id: string
+          user_email: string
+          user_nombre: string
+          user_apellido: string
+          materia_id: string
+          materia_codigo: string
+          materia_nombre: string
+          docente_id: string | null
+          docente_nombre: string | null
+          docente_apellido: string | null
+          docente_email: string | null
         }
       }
     }
   }
-} 
+}
+
+// Tipos exportados para usar en la aplicación
+export type Usuario = Database['public']['Tables']['usuarios']['Row']
+export type Materia = Database['public']['Tables']['materias']['Row']
+export type Aula = Database['public']['Tables']['aulas']['Row']
+export type Clase = Database['public']['Tables']['clases']['Row']
+export type Suscripcion = Database['public']['Tables']['suscripciones']['Row']
+export type Notificacion = Database['public']['Tables']['notificaciones']['Row']
+export type ConfiguracionSistema = Database['public']['Tables']['configuraciones_sistema']['Row']
+
+export type ClaseCompleta = Database['public']['Views']['clases_completas']['Row']
+export type SuscripcionCompleta = Database['public']['Views']['suscripciones_completas']['Row'] 
