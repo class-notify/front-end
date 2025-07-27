@@ -459,6 +459,7 @@ export function CalendarView({ onClaseClick }: CalendarViewProps) {
               Hoy
             </Button>
 
+            {/* Next button hidden as requested
             <Button
               variant="outline"
               size="sm"
@@ -466,6 +467,7 @@ export function CalendarView({ onClaseClick }: CalendarViewProps) {
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
+            */}
           </div>
         </div>
 

@@ -1,5 +1,15 @@
 ---
-description:
-globs:
-alwaysApply: false
+alwaysApply: true
+
+# Reglas globales de generación
+1. Mantén la **estructura existente**: modifica solo el archivo y la función que se indica; no toques imports ni estilos ajenos.  
+2. Sigue la *Guía de estilo*: TypeScript estricto, React 18, Tailwind 3.4, eslint‑recommended, prettier default.  
+3. Toda llamada de datos debe usar **Supabase JS v2** con tipado generado (`npx supabase gen types typescript --local`).  
+4. Los componentes deben ser **pequeños y declarativos** (<150 líneas). Extrae lógica a hooks cuando crezca.  
+5. Maneja errores con `toast.error()` y registra `console.error` solo en dev.  
+6. Cubre las ramas críticas con pruebas Jest/React‑Testing‑Library autogeneradas.  
+7. Escribe comentarios JSDoc en público API y deja TODOs con fecha (`TODO[2025‑07‑26]:`).  
+8. Nunca expongas variables de entorno que empiecen con `SERVICE_ROLE_*` o claves de terceros.  
+9. Antes de devolver código, **piensa paso a paso** y valida que compile (`npm run typecheck`).  
+10. Si el prompt pide “explicar”, responde en Markdown; si pide “aplicar”, entrega solo el *diff*.
 ---

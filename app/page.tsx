@@ -6,13 +6,14 @@ import { DashboardSuscriptor } from "../components/dashboard-suscriptor"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { User, Shield } from "lucide-react"
+import { User, Shield, Settings } from "lucide-react"
+import { UserMenu } from "@/components/user-menu"
 
 // Mock user - en producción vendría de Supabase Auth
 const mockUser = {
   id: "1",
   email: "admin@university.edu",
-  role: "admin" as const,
+  role: "admin" as "admin" | "suscriptor",
   nombre: "Admin User",
 }
 
@@ -43,35 +44,9 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Demo Role Switcher - Remove in production */}
+      {/* Botón de Usuario para Demo Mode */}
       <div className="fixed top-4 right-4 z-50">
-        <Card className="w-72 shadow-lg">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              Demo Mode
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0 space-y-3">
-            <div className="flex items-center gap-2">
-              {user.role === "admin" ? (
-                <Shield className="h-4 w-4 text-primary" />
-              ) : (
-                <User className="h-4 w-4 text-secondary" />
-              )}
-              <div className="flex-1">
-                <p className="text-sm font-medium">{user.nombre}</p>
-                <p className="text-xs text-muted-foreground">{user.email}</p>
-              </div>
-              <Badge variant={user.role === "admin" ? "default" : "secondary"} className="text-xs">
-                {user.role === "admin" ? "Admin" : "Estudiante"}
-              </Badge>
-            </div>
-            <Button onClick={toggleRole} size="sm" variant="outline" className="w-full bg-transparent text-xs">
-              Cambiar a {user.role === "admin" ? "Vista Estudiante" : "Vista Admin"}
-            </Button>
-          </CardContent>
-        </Card>
+        <UserMenu user={user} onToggleRole={toggleRole} />
       </div>
 
       {/* Render based on user role */}

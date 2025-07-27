@@ -18,72 +18,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import type { Materia, Docente } from "@/types"
-
-// Mock data actualizado
-const mockDocentes: Docente[] = [
-  {
-    id: "doc1",
-    nombre: "Dr. María González",
-    email: "maria.gonzalez@university.edu",
-    telefono: "+54 11 1234-5678",
-    created_at: "",
-  },
-  {
-    id: "doc2",
-    nombre: "Prof. Juan Pérez",
-    email: "juan.perez@university.edu",
-    telefono: "+54 11 8765-4321",
-    created_at: "",
-  },
-  {
-    id: "doc3",
-    nombre: "Dra. Ana Rodríguez",
-    email: "ana.rodriguez@university.edu",
-    created_at: "",
-  },
-]
-
-const mockMaterias: (Materia & { docente?: Docente })[] = [
-  {
-    id: "mat1",
-    codigo: "MAT101",
-    nombre: "Matemática I",
-    docente_id: "doc1",
-    docente: mockDocentes[0],
-    created_at: "",
-  },
-  {
-    id: "mat2",
-    codigo: "FIS201",
-    nombre: "Física II",
-    docente_id: "doc2",
-    docente: mockDocentes[1],
-    created_at: "",
-  },
-  {
-    id: "mat3",
-    codigo: "QUI301",
-    nombre: "Química Orgánica",
-    docente_id: "doc3",
-    docente: mockDocentes[2],
-    created_at: "",
-  },
-  {
-    id: "mat4",
-    codigo: "BIO401",
-    nombre: "Biología Molecular",
-    created_at: "",
-  },
-]
+import type { Materia } from "@/lib/supabase"
+import type { Docente } from "@/types"
 
 interface MateriasTableProps {
+  materias: (Materia & { docente?: Docente })[]
   onNewMateria: () => void
   onEditMateria: (materia: Materia) => void
+  onDeleteMateria: (id: string) => void
 }
 
-export function MateriasTable({ onNewMateria, onEditMateria }: MateriasTableProps) {
-  const [materias, setMaterias] = useState<(Materia & { docente?: Docente })[]>(mockMaterias)
+export function MateriasTable({ materias, onNewMateria, onEditMateria, onDeleteMateria }: MateriasTableProps) {
   const [docenteFilter, setDocenteFilter] = useState<string>("all")
   const [searchTerm, setSearchTerm] = useState<string>("")
 
@@ -100,7 +45,7 @@ export function MateriasTable({ onNewMateria, onEditMateria }: MateriasTableProp
   })
 
   const handleDeleteMateria = (materiaId: string) => {
-    setMaterias(materias.filter((materia) => materia.id !== materiaId))
+    onDeleteMateria(materiaId)
   }
 
   const docentes = Array.from(new Set(materias.map((m) => m.docente).filter(Boolean)))

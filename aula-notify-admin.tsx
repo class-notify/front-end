@@ -17,7 +17,9 @@ import { Separator } from "@/components/ui/separator"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { MateriasPage } from "./components/materias-page"
 import { AulasPage } from "./components/aulas-page"
-import type { Clase } from "@/types"
+import { useClases } from "@/hooks/use-clases"
+import { useToast } from "@/hooks/use-toast"
+import type { Clase } from "@/lib/supabase"
 
 type ViewType = "horarios" | "materias" | "aulas"
 
@@ -25,19 +27,42 @@ export default function AulaNotifyAdmin() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingSchedule, setEditingSchedule] = useState<Clase | null>(null)
   const [currentView, setCurrentView] = useState<ViewType>("horarios")
+  const { createClase, updateClase, deleteClase } = useClases()
+  const { toast } = useToast()
 
   const handleNewSchedule = () => {
     setEditingSchedule(null)
     setIsModalOpen(true)
   }
 
-  const handleEditSchedule = (schedule: Clase) => {
+  const handleEditSchedule = (schedule: any) => {
     setEditingSchedule(schedule)
     setIsModalOpen(true)
   }
 
-  const handleSaveSchedule = (scheduleData: Omit<Clase, "id" | "created_at" | "updated_at">) => {
-    console.log("Saving schedule:", scheduleData)
+  const handleSaveSchedule = async (scheduleData: Omit<Clase, "id" | "created_at" | "updated_at">) => {
+    try {
+      if (editingSchedule) {
+        await updateClase(editingSchedule.id, scheduleData)
+        toast({
+          title: "Clase actualizada",
+          description: "La clase se ha actualizado correctamente.",
+        })
+      } else {
+        await createClase(scheduleData)
+        toast({
+          title: "Clase creada",
+          description: "La clase se ha creado correctamente.",
+        })
+      }
+      setIsModalOpen(false)
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Hubo un error al guardar la clase.",
+        variant: "destructive",
+      })
+    }
   }
 
   const handleNavigate = (view: string) => {

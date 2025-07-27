@@ -13,10 +13,7 @@ const nextConfig = {
     unoptimized: true,
   },
   // Configuración adicional para desarrollo
-  experimental: {
-    // Habilitar features experimentales útiles
-    serverComponentsExternalPackages: [],
-  },
+  serverExternalPackages: [],
 }
 
 export default nextConfig

@@ -2,20 +2,23 @@ export interface Materia {
   id: string
   codigo: string
   nombre: string
-  docente_id?: string
+  descripcion: string | null
+  creditos: number
+  docente_id: string | null
   docente?: Docente
   created_at: string
+  updated_at: string
 }
 
 export interface Clase {
   id: string
   materia_id: string
-  materia?: Materia
+  aula_id: string | null
   fecha: string
   hora_inicio: string
   hora_fin: string
-  aula: string | null
-  estado: "programada" | "cancelada"
+  estado: "programada" | "en_curso" | "finalizada" | "cancelada"
+  motivo_cancelacion: string | null
   created_at: string
   updated_at: string
 }
@@ -41,7 +44,7 @@ export type ClaseEstado = "por_asignar" | "asignada" | "cancelada"
 
 export function getClaseEstado(clase: Clase): ClaseEstado {
   if (clase.estado === "cancelada") return "cancelada"
-  if (clase.aula) return "asignada"
+  if (clase.aula_id) return "asignada"
   return "por_asignar"
 }
 

@@ -15,7 +15,8 @@ import { ClaseDetailModal } from "./clase-detail-modal"
 import { MateriaSearchModal } from "./materia-search-modal"
 import { Calendar, Clock, MapPin, Bell, Settings, User, BookOpen, Users, Grid3X3, Filter, Plus } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import type { Clase, Suscripcion } from "@/types"
+import type { ClaseCompleta } from "@/lib/supabase"
+import type { Suscripcion } from "@/types"
 import { getClaseEstado } from "@/types"
 
 // Mock data - próximas 7 días según PRD

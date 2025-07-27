@@ -18,71 +18,25 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { useToast } from "@/components/ui/toast"
-
-import type { Clase, Materia } from "@/types"
-import { getClaseEstado } from "@/types"
+import { useToast } from "@/hooks/use-toast"
+import { useClases } from "@/hooks/use-clases"
+import type { ClaseCompleta } from "@/lib/supabase"
 import { StatusBadge } from "@/components/ui/status-badge"
 
-// Mock data actualizado
-const mockClases: (Clase & { materia: Materia })[] = [
-  {
-    id: "1",
-    materia_id: "mat1",
-    materia: { id: "mat1", codigo: "MAT101", nombre: "Matemática I", created_at: "" },
-    fecha: "2024-01-15",
-    hora_inicio: "08:00",
-    hora_fin: "10:00",
-    aula: "A101",
-    estado: "programada",
-    created_at: "",
-    updated_at: "",
-  },
-  {
-    id: "2",
-    materia_id: "phy2",
-    materia: { id: "phy2", codigo: "FIS201", nombre: "Física II", created_at: "" },
-    fecha: "2024-01-15",
-    hora_inicio: "10:00",
-    hora_fin: "12:00",
-    aula: null,
-    estado: "programada",
-    created_at: "",
-    updated_at: "",
-  },
-  {
-    id: "3",
-    materia_id: "chem3",
-    materia: { id: "chem3", codigo: "QUI301", nombre: "Química Orgánica", created_at: "" },
-    fecha: "2024-01-16",
-    hora_inicio: "14:00",
-    hora_fin: "16:00",
-    aula: "B205",
-    estado: "programada",
-    created_at: "",
-    updated_at: "",
-  },
-  {
-    id: "4",
-    materia_id: "bio4",
-    materia: { id: "bio4", codigo: "BIO401", nombre: "Biología Molecular", created_at: "" },
-    fecha: "2024-01-16",
-    hora_inicio: "16:00",
-    hora_fin: "18:00",
-    aula: "C301",
-    estado: "cancelada",
-    created_at: "",
-    updated_at: "",
-  },
-]
+// Función helper para obtener el estado de la clase
+function getClaseEstado(clase: ClaseCompleta) {
+  if (clase.estado === "cancelada") return "cancelada"
+  if (clase.aula_id) return "asignada"
+  return "por_asignar"
+}
 
 interface SchedulesTableProps {
   onNewSchedule: () => void
-  onEditSchedule: (schedule: Clase) => void
+  onEditSchedule: (schedule: ClaseCompleta) => void
 }
 
 export function SchedulesTable({ onNewSchedule, onEditSchedule }: SchedulesTableProps) {
-  const [clases, setSchedules] = useState<(Clase & { materia: Materia })[]>(mockClases)
+  const { clases, loading, error, deleteClase, updateClase } = useClases()
   const [subjectFilter, setSubjectFilter] = useState<string>("all")
   const [statusFilter, setStatusFilter] = useState<string>("all")
   const [dateFilter, setDateFilter] = useState<string>("all")
@@ -92,13 +46,13 @@ export function SchedulesTable({ onNewSchedule, onEditSchedule }: SchedulesTable
   const { toast } = useToast()
 
   const filteredSchedules = clases.filter((clase) => {
-    const matchesSubject = subjectFilter === "all" || clase.materia.codigo === subjectFilter
+    const matchesSubject = subjectFilter === "all" || clase.materia_codigo === subjectFilter
     const matchesStatus = statusFilter === "all" || clase.estado === statusFilter
     const matchesSearch =
       searchTerm === "" ||
-      clase.materia.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      clase.materia.codigo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (clase.aula && clase.aula.toLowerCase().includes(searchTerm.toLowerCase()))
+      clase.materia_nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      clase.materia_codigo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (clase.aula_codigo && clase.aula_codigo.toLowerCase().includes(searchTerm.toLowerCase()))
 
     let matchesDate = true
     if (dateFilter === "today") {
@@ -114,51 +68,62 @@ export function SchedulesTable({ onNewSchedule, onEditSchedule }: SchedulesTable
     return matchesSubject && matchesStatus && matchesSearch && matchesDate
   })
 
-  const handleClassroomEdit = (scheduleId: string, newClassroom: string) => {
-    // Validar conflicto de aula
-    const clase = clases.find((c) => c.id === scheduleId)
-    if (clase && newClassroom) {
-      const conflicto = clases.find(
-        (c) =>
-          c.id !== scheduleId &&
-          c.aula === newClassroom &&
-          c.fecha === clase.fecha &&
-          c.hora_inicio === clase.hora_inicio &&
-          c.estado !== "cancelada",
-      )
+  const handleClassroomEdit = async (scheduleId: string, newClassroom: string) => {
+    try {
+      // Validar conflicto de aula
+      const clase = clases.find((c) => c.id === scheduleId)
+      if (clase && newClassroom) {
+        const conflicto = clases.find(
+          (c) =>
+            c.id !== scheduleId &&
+            c.aula_codigo === newClassroom &&
+            c.fecha === clase.fecha &&
+            c.hora_inicio === clase.hora_inicio &&
+            c.estado !== "cancelada",
+        )
 
-      if (conflicto) {
-        toast({
-          title: "Conflicto detectado",
-          description: `El aula ${newClassroom} ya está ocupada en ese horario por ${conflicto.materia.codigo}`,
-          variant: "destructive",
-        })
-        setEditingClassroom(null)
-        return
+        if (conflicto) {
+          toast({
+            title: "Conflicto detectado",
+            description: `El aula ${newClassroom} ya está ocupada en ese horario por ${conflicto.materia_codigo}`,
+            variant: "destructive",
+          })
+          setEditingClassroom(null)
+          return
+        }
       }
+
+      // Actualizar en la base de datos
+      await updateClase(scheduleId, { aula_id: newClassroom || null })
+      setEditingClassroom(null)
+
+      toast({
+        title: "Aula actualizada",
+        description: newClassroom ? `Aula asignada: ${newClassroom}` : "Aula removida",
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Hubo un error al actualizar el aula",
+        variant: "destructive",
+      })
     }
-
-    setSchedules(
-      clases.map((clase) =>
-        clase.id === scheduleId
-          ? { ...clase, aula: newClassroom || null, updated_at: new Date().toISOString() }
-          : clase,
-      ),
-    )
-    setEditingClassroom(null)
-
-    toast({
-      title: "Aula actualizada",
-      description: newClassroom ? `Aula asignada: ${newClassroom}` : "Aula removida",
-    })
   }
 
-  const handleDeleteSchedule = (scheduleId: string) => {
-    setSchedules(clases.filter((clase) => clase.id !== scheduleId))
-    toast({
-      title: "Clase eliminada",
-      description: "La clase ha sido eliminada correctamente",
-    })
+  const handleDeleteSchedule = async (scheduleId: string) => {
+    try {
+      await deleteClase(scheduleId)
+      toast({
+        title: "Clase eliminada",
+        description: "La clase ha sido eliminada correctamente",
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Hubo un error al eliminar la clase",
+        variant: "destructive",
+      })
+    }
   }
 
   const startEdit = (scheduleId: string, currentValue: string) => {
@@ -166,12 +131,32 @@ export function SchedulesTable({ onNewSchedule, onEditSchedule }: SchedulesTable
     setEditValue(currentValue || "")
   }
 
-  const subjects = Array.from(new Set(clases.map((s) => s.materia.codigo)))
+  const subjects = Array.from(new Set(clases.map((s) => s.materia_codigo)))
   const estadisticas = {
     total: clases.length,
-    asignadas: clases.filter((c) => c.aula && c.estado !== "cancelada").length,
-    pendientes: clases.filter((c) => !c.aula && c.estado !== "cancelada").length,
+    asignadas: clases.filter((c) => c.aula_id && c.estado !== "cancelada").length,
+    pendientes: clases.filter((c) => !c.aula_id && c.estado !== "cancelada").length,
     canceladas: clases.filter((c) => c.estado === "cancelada").length,
+  }
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Cargando clases...</div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-red-600">Error: {error}</div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -294,9 +279,9 @@ export function SchedulesTable({ onNewSchedule, onEditSchedule }: SchedulesTable
                   <TableCell>
                     <div>
                       <Badge variant="outline" className="font-mono text-xs mb-1">
-                        {clase.materia.codigo}
+                        {clase.materia_codigo}
                       </Badge>
-                      <p className="text-sm font-medium">{clase.materia.nombre}</p>
+                      <p className="text-sm font-medium">{clase.materia_nombre}</p>
                     </div>
                   </TableCell>
                   <TableCell>
@@ -333,10 +318,10 @@ export function SchedulesTable({ onNewSchedule, onEditSchedule }: SchedulesTable
                       />
                     ) : (
                       <button
-                        onClick={() => startEdit(clase.id, clase.aula || "")}
+                        onClick={() => startEdit(clase.id, clase.aula_codigo || "")}
                         className="text-left hover:bg-accent hover:text-accent-foreground rounded px-2 py-1 -mx-2 -my-1 transition-colors text-sm"
                       >
-                        {clase.aula || <span className="text-muted-foreground italic">Sin asignar</span>}
+                        {clase.aula_codigo || <span className="text-muted-foreground italic">Sin asignar</span>}
                       </button>
                     )}
                   </TableCell>
@@ -359,7 +344,7 @@ export function SchedulesTable({ onNewSchedule, onEditSchedule }: SchedulesTable
                             <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
                             <AlertDialogDescription>
                               Esta acción no se puede deshacer. Se eliminará permanentemente la clase de{" "}
-                              <strong>{clase.materia.codigo}</strong> del {clase.fecha}.
+                              <strong>{clase.materia_codigo}</strong> del {clase.fecha}.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>

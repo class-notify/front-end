@@ -9,8 +9,10 @@ import { Badge } from "@/components/ui/badge"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, BookOpen, User, Clock, Plus, X } from "lucide-react"
-import type { Materia, Docente } from "@/types"
+import { Search, BookOpen, User, Clock, Plus, X, Loader2 } from "lucide-react"
+import { materiasService } from "@/lib/services/materias"
+import { suscripcionesService } from "@/lib/services/suscripciones"
+import type { Materia } from "@/lib/supabase"
 
 // Mock data para materias disponibles
 const mockMateriasDisponibles: (Materia & {

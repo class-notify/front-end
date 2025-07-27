@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -15,29 +15,43 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import type { Materia, Docente } from "@/types"
+import { Textarea } from "@/components/ui/textarea"
+import type { Materia, Usuario } from "@/lib/supabase"
 
-// Mock docentes - en producción vendría de Supabase
-const mockDocentes: Docente[] = [
+// Datos mock de docentes como fallback
+const mockDocentes: Usuario[] = [
   {
-    id: "doc1",
+    id: "550e8400-e29b-41d4-a716-446655440002",
     nombre: "Dr. María González",
+    apellido: "González",
     email: "maria.gonzalez@university.edu",
     telefono: "+54 11 1234-5678",
-    created_at: "",
+    rol: "docente",
+    avatar_url: null,
+    created_at: "2024-01-01T00:00:00Z",
+    updated_at: "2024-01-01T00:00:00Z",
   },
   {
-    id: "doc2",
+    id: "550e8400-e29b-41d4-a716-446655440003",
     nombre: "Prof. Juan Pérez",
+    apellido: "Pérez",
     email: "juan.perez@university.edu",
     telefono: "+54 11 8765-4321",
-    created_at: "",
+    rol: "docente",
+    avatar_url: null,
+    created_at: "2024-01-01T00:00:00Z",
+    updated_at: "2024-01-01T00:00:00Z",
   },
   {
-    id: "doc3",
+    id: "550e8400-e29b-41d4-a716-446655440004",
     nombre: "Dra. Ana Rodríguez",
+    apellido: "Rodríguez",
     email: "ana.rodriguez@university.edu",
-    created_at: "",
+    telefono: null,
+    rol: "docente",
+    avatar_url: null,
+    created_at: "2024-01-01T00:00:00Z",
+    updated_at: "2024-01-01T00:00:00Z",
   },
 ]
 
@@ -45,17 +59,79 @@ interface MateriaFormModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   materia?: Materia | null
-  onSave: (materia: Omit<Materia, "id" | "created_at">) => void
+  onSave: (materia: Omit<Materia, "id" | "created_at" | "updated_at">) => void
 }
 
 export function MateriaFormModal({ open, onOpenChange, materia, onSave }: MateriaFormModalProps) {
   const [formData, setFormData] = useState({
-    codigo: materia?.codigo || "",
-    nombre: materia?.nombre || "",
-    docente_id: materia?.docente_id || "default",
+    codigo: "",
+    nombre: "",
+    descripcion: "",
+    creditos: 0,
+    docente_id: "none",
   })
 
+  const [docentes, setDocentes] = useState<Usuario[]>([])
+  const [loadingDocentes, setLoadingDocentes] = useState(false)
+  const [useMockDocentes, setUseMockDocentes] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
+
+  // Actualizar formulario cuando cambia la materia a editar
+  useEffect(() => {
+    if (materia) {
+      setFormData({
+        codigo: materia.codigo || "",
+        nombre: materia.nombre || "",
+        descripcion: materia.descripcion || "",
+        creditos: materia.creditos || 0,
+        docente_id: materia.docente_id || "none",
+      })
+    } else {
+      setFormData({
+        codigo: "",
+        nombre: "",
+        descripcion: "",
+        creditos: 0,
+        docente_id: "none",
+      })
+    }
+  }, [materia])
+
+  // Cargar docentes desde Supabase
+  useEffect(() => {
+    const fetchDocentes = async () => {
+      try {
+        setLoadingDocentes(true)
+        const response = await fetch('/api/usuarios?role=docente')
+        if (response.ok) {
+          const data = await response.json()
+          if (data.length > 0) {
+            setDocentes(data)
+            setUseMockDocentes(false)
+          } else {
+            // Usar datos mock si no hay docentes en la base de datos
+            setDocentes(mockDocentes)
+            setUseMockDocentes(true)
+          }
+        } else {
+          // Fallback a datos mock
+          setDocentes(mockDocentes)
+          setUseMockDocentes(true)
+        }
+      } catch (error) {
+        console.error('Error fetching docentes:', error)
+        // Fallback a datos mock
+        setDocentes(mockDocentes)
+        setUseMockDocentes(true)
+      } finally {
+        setLoadingDocentes(false)
+      }
+    }
+
+    if (open) {
+      fetchDocentes()
+    }
+  }, [open])
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
@@ -70,6 +146,10 @@ export function MateriaFormModal({ open, onOpenChange, materia, onSave }: Materi
       newErrors.nombre = "El nombre es requerido"
     }
 
+    if (formData.creditos < 0 || formData.creditos > 10) {
+      newErrors.creditos = "Los créditos deben estar entre 0 y 10"
+    }
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -82,8 +162,11 @@ export function MateriaFormModal({ open, onOpenChange, materia, onSave }: Materi
     }
 
     onSave({
-      ...formData,
-      docente_id: formData.docente_id || undefined,
+      codigo: formData.codigo,
+      nombre: formData.nombre,
+      descripcion: formData.descripcion || null,
+      creditos: formData.creditos,
+      docente_id: formData.docente_id === "none" ? null : formData.docente_id,
     })
 
     onOpenChange(false)
@@ -92,7 +175,9 @@ export function MateriaFormModal({ open, onOpenChange, materia, onSave }: Materi
     setFormData({
       codigo: "",
       nombre: "",
-      docente_id: "default",
+      descripcion: "",
+      creditos: 0,
+      docente_id: "none",
     })
     setErrors({})
   }
@@ -135,23 +220,55 @@ export function MateriaFormModal({ open, onOpenChange, materia, onSave }: Materi
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="descripcion">Descripción</Label>
+              <Textarea
+                id="descripcion"
+                placeholder="Descripción de la materia..."
+                value={formData.descripcion}
+                onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
+                rows={3}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="creditos">Créditos</Label>
+              <Input
+                id="creditos"
+                type="number"
+                min="0"
+                max="10"
+                placeholder="4"
+                value={formData.creditos}
+                onChange={(e) => setFormData({ ...formData, creditos: parseInt(e.target.value) || 0 })}
+                className={errors.creditos ? "border-red-500" : ""}
+              />
+              {errors.creditos && <p className="text-sm text-red-700">{errors.creditos}</p>}
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="docente">Docente</Label>
               <Select
                 value={formData.docente_id}
                 onValueChange={(value) => setFormData({ ...formData, docente_id: value })}
+                disabled={loadingDocentes}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Seleccionar docente" />
+                  <SelectValue placeholder={loadingDocentes ? "Cargando docentes..." : "Seleccionar docente"} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="default">Sin asignar</SelectItem>
-                  {mockDocentes.map((docente) => (
+                  <SelectItem value="none">Sin asignar</SelectItem>
+                  {docentes.map((docente) => (
                     <SelectItem key={docente.id} value={docente.id}>
-                      {docente.nombre}
+                      {docente.nombre} {docente.apellido}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              {useMockDocentes && (
+                <p className="text-xs text-yellow-600">
+                  ⚠️ Usando datos de ejemplo. Configura la base de datos para ver docentes reales.
+                </p>
+              )}
             </div>
           </div>
 
