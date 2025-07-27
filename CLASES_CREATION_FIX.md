@@ -8,12 +8,12 @@
 
 El problema estaba en el archivo `aula-notify-admin.tsx` en la función `handleSaveSchedule`:
 
-```typescript
+\`\`\`typescript
 // ❌ ANTES - Solo console.log, no guardaba nada
 const handleSaveSchedule = (scheduleData: Omit<Clase, "id" | "created_at" | "updated_at">) => {
   console.log("Saving schedule:", scheduleData)
 }
-```
+\`\`\`
 
 ## Solución Implementada
 
@@ -26,7 +26,7 @@ const handleSaveSchedule = (scheduleData: Omit<Clase, "id" | "created_at" | "upd
 - Agregado manejo de operaciones CRUD reales
 - Implementado manejo de errores con toasts
 
-```typescript
+\`\`\`typescript
 // ✅ DESPUÉS - Usando hooks reales
 import { useClases } from "@/hooks/use-clases"
 import { useToast } from "@/hooks/use-toast"
@@ -60,7 +60,7 @@ export default function AulaNotifyAdmin() {
     }
   }
 }
-```
+\`\`\`
 
 ### 2. Corrección de Tipos en Hook
 
@@ -69,7 +69,7 @@ export default function AulaNotifyAdmin() {
 **Problema**: El hook estaba usando `ClaseCompleta` para operaciones de escritura, pero solo necesita `Clase`
 
 **Solución**:
-```typescript
+\`\`\`typescript
 // ✅ Corregido para usar tipos correctos
 const createClase = async (claseData: Omit<Clase, 'id' | 'created_at' | 'updated_at'>) => {
   // ... implementación
@@ -78,7 +78,7 @@ const createClase = async (claseData: Omit<Clase, 'id' | 'created_at' | 'updated
 const updateClase = async (id: string, updates: Partial<Clase>) => {
   // ... implementación
 }
-```
+\`\`\`
 
 ## Verificación de Funcionamiento
 
@@ -94,7 +94,7 @@ Se ejecutó una prueba completa que verificó:
 
 ### Resultado de la Prueba
 
-```
+\`\`\`
 === PRUEBA DE CREACIÓN DE CLASES ===
 
 1. Obteniendo materias...
@@ -118,7 +118,7 @@ Primera aula: A101 - Aula Magna Norte
 ✅ Clase eliminada exitosamente
 
 🎉 ¡Todas las pruebas de creación de clases pasaron exitosamente!
-```
+\`\`\`
 
 ## Estado Actual
 
@@ -158,4 +158,4 @@ El problema de creación de clases ha sido completamente resuelto. La aplicació
 - ✅ Actualiza la interfaz automáticamente
 - ✅ Maneja errores apropiadamente
 
-**Las clases creadas desde la vista de administrador ahora impactan correctamente en la base de datos.** 
+**Las clases creadas desde la vista de administrador ahora impactan correctamente en la base de datos.**

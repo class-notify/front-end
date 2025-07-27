@@ -8,7 +8,7 @@
 
 El componente `SchedulesTable` tenía datos mock hardcodeados:
 
-```typescript
+\`\`\`typescript
 // ❌ ANTES - Datos mock hardcodeados
 const mockClases: (Clase & { materia: Materia })[] = [
   {
@@ -30,7 +30,7 @@ export function SchedulesTable({ onNewSchedule, onEditSchedule }: SchedulesTable
   const [clases, setSchedules] = useState<(Clase & { materia: Materia })[]>(mockClases)
   // ...
 }
-```
+\`\`\`
 
 ## Solución Implementada
 
@@ -44,7 +44,7 @@ export function SchedulesTable({ onNewSchedule, onEditSchedule }: SchedulesTable
 - Actualizado tipos para usar `ClaseCompleta`
 - Agregado estados de carga y error
 
-```typescript
+\`\`\`typescript
 // ✅ DESPUÉS - Usando datos reales
 import { useClases } from "@/hooks/use-clases"
 import type { ClaseCompleta } from "@/lib/supabase"
@@ -63,14 +63,14 @@ export function SchedulesTable({ onNewSchedule, onEditSchedule }: SchedulesTable
   
   // ... resto del componente
 }
-```
+\`\`\`
 
 ### 2. Corrección de Referencias de Campos
 
 **Problema**: Los campos de `ClaseCompleta` tienen nombres diferentes a los mock
 
 **Solución**:
-```typescript
+\`\`\`typescript
 // ❌ ANTES - Referencias incorrectas
 clase.materia.codigo
 clase.materia.nombre
@@ -80,7 +80,7 @@ clase.aula
 clase.materia_codigo
 clase.materia_nombre
 clase.aula_codigo
-```
+\`\`\`
 
 ### 3. Actualización de Operaciones CRUD
 
@@ -91,14 +91,14 @@ clase.aula_codigo
 
 ### 4. Función Helper para Estado
 
-```typescript
+\`\`\`typescript
 // Función helper para obtener el estado de la clase
 function getClaseEstado(clase: ClaseCompleta) {
   if (clase.estado === "cancelada") return "cancelada"
   if (clase.aula_id) return "asignada"
   return "por_asignar"
 }
-```
+\`\`\`
 
 ## Verificación de Funcionamiento
 
@@ -114,7 +114,7 @@ Se ejecutó una prueba completa que verificó:
 
 ### Resultado de la Prueba
 
-```
+\`\`\`
 === PRUEBA DE TABLA DE HORARIOS ===
 
 1. Obteniendo clases desde la vista completa...
@@ -146,7 +146,7 @@ Primeras 3 clases:
 ✅ Clase de prueba eliminada
 
 🎉 ¡Todas las pruebas de la tabla de horarios pasaron exitosamente!
-```
+\`\`\`
 
 ## Estado Actual
 
@@ -187,4 +187,4 @@ El problema de datos hardcodeados ha sido completamente resuelto. La aplicación
 - ✅ Maneja estados de carga y error apropiadamente
 - ✅ Mantiene todas las funcionalidades de filtrado y búsqueda
 
-**La vista de gestión de horarios ahora muestra datos reales y se actualiza correctamente cuando se crean nuevas clases.** 
+**La vista de gestión de horarios ahora muestra datos reales y se actualiza correctamente cuando se crean nuevas clases.**

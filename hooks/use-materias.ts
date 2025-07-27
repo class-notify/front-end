@@ -114,4 +114,4 @@ export function useMaterias() {
     updateMateria,
     deleteMateria,
   }
-} 
+}

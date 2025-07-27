@@ -13,7 +13,7 @@
 - ✅ **Agregado**: Botón de usuario discreto en la esquina superior derecha
 - ✅ **Integrado**: Funcionalidad de cambio de rol en el menú de usuario
 
-```typescript
+\`\`\`typescript
 // ❌ ANTES - Cartel grande visible
 <div className="fixed top-4 right-4 z-50">
   <Card className="w-72 shadow-lg">
@@ -33,7 +33,7 @@
 <div className="fixed top-4 right-4 z-50">
   <UserMenu user={user} onToggleRole={toggleRole} />
 </div>
-```
+\`\`\`
 
 ### 2. Componente UserMenu (`components/user-menu.tsx`)
 
@@ -44,7 +44,7 @@
 - ✅ **Badge de rol**: Indica visualmente el rol actual
 - ✅ **Opción de cambio**: Integrada en el menú desplegable
 
-```typescript
+\`\`\`typescript
 interface UserMenuProps {
   user?: {
     id: string
@@ -58,7 +58,7 @@ interface UserMenuProps {
 export function UserMenu({ user, onToggleRole }: UserMenuProps) {
   // Lógica del componente
 }
-```
+\`\`\`
 
 ### 3. Funcionalidades del Menú de Usuario
 
@@ -119,4 +119,4 @@ La interfaz de usuario ha sido mejorada significativamente:
 - ✅ **Funcionalidad preservada**: Cambio de rol funciona perfectamente
 - ✅ **Diseño mejorado**: Más profesional y menos intrusivo
 
-**El demo mode ahora es accesible de forma discreta a través del botón de usuario, manteniendo toda la funcionalidad pero con una interfaz más limpia y profesional.** 
+**El demo mode ahora es accesible de forma discreta a través del botón de usuario, manteniendo toda la funcionalidad pero con una interfaz más limpia y profesional.**

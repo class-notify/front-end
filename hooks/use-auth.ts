@@ -212,4 +212,4 @@ export function useAuth() {
     signOut,
     updateProfile,
   }
-} 
+}

@@ -56,33 +56,33 @@
 ## Configuración de Supabase
 
 ### Cliente Principal
-```typescript
+\`\`\`typescript
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-```
+\`\`\`
 
 ### Cliente Administrativo (para bypass RLS)
-```typescript
+\`\`\`typescript
 export const supabaseAdmin = supabaseServiceKey 
   ? createClient(supabaseUrl, supabaseServiceKey)
   : supabase
-```
+\`\`\`
 
 ## Uso Correcto en la Aplicación
 
 ### Para Operaciones de Lectura (Públicas)
-```typescript
+\`\`\`typescript
 const { data, error } = await supabase
   .from('materias')
   .select('*')
-```
+\`\`\`
 
 ### Para Operaciones de Escritura (Administrativas)
-```typescript
+\`\`\`typescript
 const { data, error } = await supabaseAdmin
   .from('materias')
   .insert(materiaData)
   .select()
-```
+\`\`\`
 
 ## Recomendaciones
 
@@ -116,4 +116,4 @@ La conexión con Supabase está funcionando correctamente. Los datos creados des
 1. Uso de hooks con datos mock en lugar de la API real
 2. Falta de implementación completa de operaciones CRUD en algunos componentes
 
-Estos problemas han sido resueltos y la aplicación ahora está conectada correctamente a Supabase. 
+Estos problemas han sido resueltos y la aplicación ahora está conectada correctamente a Supabase.

@@ -77,4 +77,4 @@ if (validVars.length === requiredVars.length) {
   console.log('NODE_ENV=development');
 }
 
-console.log(''); 
+console.log('');

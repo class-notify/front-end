@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss"
 
-const config: Config = {
+const config = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -20,22 +20,48 @@ const config: Config = {
     },
     extend: {
       colors: {
-        // Aula-Notify Design System - Según README
-        primary: {
-          DEFAULT: "#0050FF", // Color primario
-          foreground: "#FFFFFF",
+        // Aulero Brand Palette
+        "brand-gradient": {
+          start: "#2E1B4A",
+          end: "#4A1C8F",
         },
-        secondary: {
-          DEFAULT: "#FF5722", // Color secundario
-          foreground: "#FFFFFF",
+        "brand-surface": "#3A2D5F",
+        "brand-border": "#5E4B8B",
+        "brand-text": {
+          DEFAULT: "#E1DFF4",
+          heading: "#F4F4F4",
         },
-        background: "#F9FAFB", // Fondo neutro
-        foreground: "#1A202C", // Texto neutro
+        "brand-accent": {
+          yellow: "#FFD447",
+          pink: "#FF72E0",
+        },
 
-        // Keep shadcn defaults for components
+        // Light mode colors
+        "light-bg": "#F9FAFB",
+        "light-surface": "#FFFFFF",
+        "light-text": {
+          DEFAULT: "#1A202C",
+          muted: "#718096",
+        },
+
+        // Shadcn variables
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
@@ -52,18 +78,21 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
+        sans: ["var(--font-inter)", "sans-serif"],
+        heading: ["var(--font-poppins)", "sans-serif"],
       },
       borderRadius: {
-        lg: "0.5rem",
-        md: "calc(0.5rem - 2px)",
-        sm: "calc(0.5rem - 4px)",
+        "2xl": "1rem",
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      boxShadow: {
+        "glow-accent": "0 0 15px 0 rgba(255, 212, 71, 0.3)",
+        "glow-accent-hover": "0 0 25px 5px rgba(255, 212, 71, 0.4)",
+        "brand-card": "0 4px 20px rgba(46, 27, 74, 0.3)",
       },
       keyframes: {
         "accordion-down": {
@@ -74,10 +103,15 @@ const config: Config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "fade-in": {
+          from: { opacity: "0", transform: "translateY(10px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "fade-in": "fade-in 0.3s ease-out",
       },
     },
   },

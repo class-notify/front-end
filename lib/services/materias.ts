@@ -123,4 +123,4 @@ export const materiasService = {
 
     return data
   }
-} 
+}

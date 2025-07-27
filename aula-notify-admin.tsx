@@ -5,30 +5,26 @@ import { AppSidebar } from "./components/app-sidebar"
 import { SchedulesTable } from "./components/schedules-table"
 import { ScheduleFormModal } from "./components/schedule-form-modal"
 import { UserMenu } from "./components/user-menu"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { ThemeToggle } from "./components/ui/theme-toggle"
+import { CalendarView } from "@/components/calendar-view"
+import { DashboardAulero } from "@/components/dashboard-aulero"
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { MateriasPage } from "./components/materias-page"
 import { AulasPage } from "./components/aulas-page"
 import { useClases } from "@/hooks/use-clases"
 import { useToast } from "@/hooks/use-toast"
+import { useAuth } from "@/hooks/use-auth"
 import type { Clase } from "@/lib/supabase"
 
-type ViewType = "horarios" | "materias" | "aulas"
+type ViewType = "horarios" | "materias" | "aulas" | "calendar" | "dashboard"
 
 export default function AulaNotifyAdmin() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingSchedule, setEditingSchedule] = useState<Clase | null>(null)
-  const [currentView, setCurrentView] = useState<ViewType>("horarios")
+  const [activeView, setActiveView] = useState<ViewType>("dashboard")
   const { createClase, updateClase, deleteClase } = useClases()
   const { toast } = useToast()
+  const { user } = useAuth()
 
   const handleNewSchedule = () => {
     setEditingSchedule(null)
@@ -45,121 +41,83 @@ export default function AulaNotifyAdmin() {
       if (editingSchedule) {
         await updateClase(editingSchedule.id, scheduleData)
         toast({
-          title: "Clase actualizada",
-          description: "La clase se ha actualizado correctamente.",
+          title: "¡Clase actualizada!",
+          description: "Los cambios se guardaron correctamente.",
         })
       } else {
         await createClase(scheduleData)
         toast({
-          title: "Clase creada",
-          description: "La clase se ha creado correctamente.",
+          title: "¡Nueva clase creada!",
+          description: "La clase se agregó al sistema exitosamente.",
         })
       }
       setIsModalOpen(false)
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Hubo un error al guardar la clase.",
+        title: "¡Ups! Algo salió mal",
+        description: "No pudimos guardar los cambios. Intentá de nuevo.",
         variant: "destructive",
       })
     }
   }
 
-  const handleNavigate = (view: string) => {
-    setCurrentView(view as ViewType)
-  }
-
-  const getBreadcrumbTitle = () => {
-    switch (currentView) {
-      case "materias":
-        return "Materias"
-      case "aulas":
-        return "Aulas"
-      case "horarios":
-        return "Horarios"
-      default:
-        return "Horarios"
-    }
-  }
-
-  const getPageTitle = () => {
-    switch (currentView) {
-      case "materias":
-        return "Gestión de Materias"
-      case "aulas":
-        return "Gestión de Aulas"
-      case "horarios":
-        return "Gestión de Horarios"
-      default:
-        return "Aula-Notify Admin"
-    }
-  }
-
   const renderContent = () => {
-    switch (currentView) {
+    switch (activeView) {
+      case "dashboard":
+        return <DashboardAulero />
       case "materias":
         return <MateriasPage />
       case "aulas":
         return <AulasPage />
+      case "calendar":
+        return <CalendarView />
       case "horarios":
       default:
         return (
-          <>
+          <div className="space-y-6 animate-fade-in">
             <div>
-              <h2 className="text-2xl font-bold tracking-tight">Gestión de Horarios</h2>
-              <p className="">Administra los horarios de clases y asignación de aulas</p>
+              <h2 className="brand-heading text-2xl mb-2">📅 Gestión de Horarios</h2>
+              <p className="brand-text">Organizá los horarios de clases y asignación de aulas</p>
             </div>
             <SchedulesTable onNewSchedule={handleNewSchedule} onEditSchedule={handleEditSchedule} />
-          </>
+          </div>
         )
     }
   }
 
   return (
     <SidebarProvider>
-      <AppSidebar currentView={currentView} onNavigate={handleNavigate} userRole="admin" />
-      <SidebarInset>
-        {/* Header */}
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-          <SidebarTrigger className="-ml-1" />
-          <Separator orientation="vertical" className="mr-2 h-4" />
-          <div className="flex flex-1 items-center justify-between">
-            <div className="flex items-center gap-2">
-              <h1 className="text-lg font-semibold">{getPageTitle()}</h1>
+      <div className="flex h-screen w-full">
+        <AppSidebar activeView={activeView} onViewChange={setActiveView} userRole="admin" />
+        <main className="flex-1 flex flex-col overflow-hidden">
+          <header className="flex items-center justify-between p-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="flex items-center gap-4">
+              <SidebarTrigger />
+              <h1 className="text-xl font-semibold">
+                {activeView === "dashboard" && "Dashboard"}
+                {activeView === "aulas" && "Gestión de Aulas"}
+                {activeView === "materias" && "Gestión de Materias"}
+                {activeView === "calendar" && "Calendario de Clases"}
+                {activeView === "horarios" && "📅 Gestión de Horarios"}
+              </h1>
             </div>
-            <UserMenu />
-          </div>
-        </header>
-
-        {/* Main Content */}
-        <div className="flex flex-1 flex-col gap-4 p-4">
-          {/* Breadcrumbs */}
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/">Home</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>{getBreadcrumbTitle()}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-
-          {/* Content Area */}
-          <div className="flex-1 space-y-4">{renderContent()}</div>
-        </div>
-
-        {/* Modal - Only show for schedules */}
-        {currentView === "horarios" && (
-          <ScheduleFormModal
-            open={isModalOpen}
-            onOpenChange={setIsModalOpen}
-            schedule={editingSchedule}
-            onSave={handleSaveSchedule}
-          />
-        )}
-      </SidebarInset>
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <UserMenu user={user || undefined} />
+            </div>
+          </header>
+          <div className="flex-1 overflow-auto p-6">{renderContent()}</div>
+        </main>
+      </div>
+      {/* Modal - Only show for schedules */}
+      {activeView === "horarios" && (
+        <ScheduleFormModal
+          open={isModalOpen}
+          onOpenChange={setIsModalOpen}
+          schedule={editingSchedule}
+          onSave={handleSaveSchedule}
+        />
+      )}
     </SidebarProvider>
   )
 }

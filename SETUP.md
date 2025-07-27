@@ -4,12 +4,12 @@
 
 Crea un archivo `.env.local` en la raíz del proyecto con las siguientes variables:
 
-```env
+\`\`\`env
 # Supabase Configuration
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd2dXdyYXZqc3Fpb2Nka3dkeWZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MzU1NjgwMSwiZXhwIjoyMDY5MTMyODAxfQ.OzBLK7hKDMUCQ0NEkY_OfDC7LqVP5X_VFZEZrPqMOPY
-```
+\`\`\`
 
 ### Cómo obtener estas claves:
 
@@ -22,15 +22,15 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhY
 
 ### Ejecutar el script de configuración:
 
-```bash
+\`\`\`bash
 cd database
 chmod +x setup-database.sh
 ./setup-database.sh
-```
+\`\`\`
 
 O ejecutar manualmente:
 
-```bash
+\`\`\`bash
 # Conectar a tu base de datos Supabase
 psql "postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres"
 
@@ -39,7 +39,7 @@ psql "postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:54
 
 # Insertar datos de ejemplo
 \i seed-data.sql
-```
+\`\`\`
 
 ## 3. Estructura de la Base de Datos
 
@@ -105,7 +105,7 @@ Los siguientes componentes ahora usan datos reales de Supabase:
 
 ## 7. Comandos Útiles
 
-```bash
+\`\`\`bash
 # Instalar dependencias
 npm install
 
@@ -117,7 +117,7 @@ npm run build
 
 # Ejecutar en producción
 npm start
-```
+\`\`\`
 
 ## 8. Troubleshooting
 
@@ -132,4 +132,4 @@ npm start
 
 ### Error de tipos TypeScript:
 - Ejecuta `npm run build` para verificar errores de tipos
-- Asegúrate de que los tipos en `lib/supabase.ts` coincidan con tu esquema 
+- Asegúrate de que los tipos en `lib/supabase.ts` coincidan con tu esquema

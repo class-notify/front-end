@@ -14,14 +14,14 @@ Este directorio contiene todos los archivos necesarios para configurar la base d
 ### Opción 1: Script Automatizado (Recomendado)
 
 1. **Asegúrate de tener las variables de entorno configuradas** en tu `.env.local`:
-```env
+\`\`\`env
 POSTGRES_URL="postgres://postgres.gvuwravjsqiocdkwdyfy:H1MTOVm7XDi67jOF@aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=require&supa=base-pooler.x"
-```
+\`\`\`
 
 2. **Ejecuta el script de configuración**:
-```bash
+\`\`\`bash
 ./database/setup-database.sh
-```
+\`\`\`
 
 ### Opción 2: Configuración Manual
 
@@ -93,24 +93,24 @@ POSTGRES_URL="postgres://postgres.gvuwravjsqiocdkwdyfy:H1MTOVm7XDi67jOF@aws-0-us
 ## 🔧 Comandos Útiles
 
 ### Verificar conexión
-```bash
+\`\`\`bash
 psql "$POSTGRES_URL" -c "SELECT version();"
-```
+\`\`\`
 
 ### Ver tablas creadas
-```bash
+\`\`\`bash
 psql "$POSTGRES_URL" -c "\dt"
-```
+\`\`\`
 
 ### Ver datos de ejemplo
-```bash
+\`\`\`bash
 psql "$POSTGRES_URL" -c "SELECT * FROM usuarios LIMIT 5;"
-```
+\`\`\`
 
 ### Ver clases programadas
-```bash
+\`\`\`bash
 psql "$POSTGRES_URL" -c "SELECT * FROM clases_completas LIMIT 5;"
-```
+\`\`\`
 
 ## 🚨 Solución de Problemas
 
@@ -130,9 +130,9 @@ psql "$POSTGRES_URL" -c "SELECT * FROM clases_completas LIMIT 5;"
 Para actualizar la base de datos después de cambios:
 
 1. **Hacer backup** (opcional):
-```bash
+\`\`\`bash
 pg_dump "$POSTGRES_URL" > backup_$(date +%Y%m%d_%H%M%S).sql
-```
+\`\`\`
 
 2. **Ejecutar solo los cambios necesarios** en el SQL Editor de Supabase
 
@@ -146,4 +146,4 @@ pg_dump "$POSTGRES_URL" > backup_$(date +%Y%m%d_%H%M%S).sql
 
 ---
 
-**¡Tu base de datos está lista para usar con Aula-Notify!** 🎉 
+**¡Tu base de datos está lista para usar con Aula-Notify!** 🎉

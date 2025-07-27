@@ -179,4 +179,4 @@ export const clasesService = {
 
     return data
   }
-} 
+}

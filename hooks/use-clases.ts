@@ -132,4 +132,4 @@ export function useClases(userId?: string) {
     deleteClase,
     cancelarClase,
   }
-} 
+}

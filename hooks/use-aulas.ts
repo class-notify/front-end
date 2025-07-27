@@ -107,4 +107,4 @@ export function useAulas() {
     deleteAula,
     getAulasDisponibles,
   }
-} 
+}

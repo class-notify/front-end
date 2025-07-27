@@ -27,22 +27,22 @@
 3. Ve a **Settings** > **API**
 4. En la sección **Project API keys**, copia la **service_role** key
 5. Reemplaza en `.env.local`:
-   ```env
+   \`\`\`env
    SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key_real_aqui
-   ```
+   \`\`\`
 
 ### 2. Configurar la Base de Datos
 
 Ejecuta los scripts de base de datos:
 
-```bash
+\`\`\`bash
 cd database
 chmod +x setup-database.sh
 ./setup-database.sh
-```
+\`\`\`
 
 O manualmente:
-```bash
+\`\`\`bash
 # Conectar a Supabase
 psql "postgresql://postgres:[TU-PASSWORD]@db.gvuwravjsqiocdkwdyfy.supabase.co:5432/postgres"
 
@@ -51,13 +51,13 @@ psql "postgresql://postgres:[TU-PASSWORD]@db.gvuwravjsqiocdkwdyfy.supabase.co:54
 
 # Insertar datos de ejemplo
 \i seed-data.sql
-```
+\`\`\`
 
 ### 3. Verificar la Configuración
 
-```bash
+\`\`\`bash
 npm run check-env
-```
+\`\`\`
 
 ## 🚀 Cómo Probar
 
@@ -114,7 +114,7 @@ npm run check-env
 
 ## 🎯 Comandos Útiles
 
-```bash
+\`\`\`bash
 # Verificar configuración
 npm run check-env
 
@@ -129,7 +129,7 @@ npm start
 
 # Linting
 npm run lint
-```
+\`\`\`
 
 ## 📞 Soporte
 
@@ -139,4 +139,4 @@ Si tienes problemas:
 3. Revisa la consola del navegador
 4. Consulta la documentación de Supabase
 
-¡Tu aplicación está lista para usar! 🚀 
+¡Tu aplicación está lista para usar! 🚀

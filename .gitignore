@@ -122,4 +122,4 @@ temp/
 *.sw?
 
 # Supabase
-.supabase/ 
+.supabase/

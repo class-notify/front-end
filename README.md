@@ -43,41 +43,41 @@ Sistema de notificación de aulas universitarias que permite a los estudiantes r
 ### Pasos de instalación
 
 1. **Clonar el repositorio**
-```bash
+\`\`\`bash
 git clone https://github.com/tu-usuario/class-notify.git
 cd class-notify
-```
+\`\`\`
 
 2. **Instalar dependencias**
-```bash
+\`\`\`bash
 npm install
 # o
 pnpm install
-```
+\`\`\`
 
 3. **Configurar variables de entorno**
-```bash
+\`\`\`bash
 cp .env.example .env.local
-```
+\`\`\`
 
 Editar `.env.local` con tus credenciales de Supabase:
-```env
+\`\`\`env
 NEXT_PUBLIC_SUPABASE_URL=tu_url_de_supabase
 NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key
 SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
-```
+\`\`\`
 
 4. **Ejecutar en desarrollo**
-```bash
+\`\`\`bash
 npm run dev
 # o
 pnpm dev
-```
+\`\`\`
 
 5. **Abrir en el navegador**
-```
+\`\`\`
 http://localhost:3000
-```
+\`\`\`
 
 ## 🗄️ Estructura de la Base de Datos
 
@@ -91,7 +91,7 @@ http://localhost:3000
 
 ## 🔧 Scripts Disponibles
 
-```bash
+\`\`\`bash
 # Desarrollo
 npm run dev
 
@@ -106,7 +106,7 @@ npm run lint
 
 # Type checking
 npm run type-check
-```
+\`\`\`
 
 ## 📱 Uso del Sistema
 
@@ -156,4 +156,4 @@ Si tienes alguna pregunta o necesitas ayuda, puedes:
 
 ---
 
-**Desarrollado con ❤️ para mejorar la experiencia educativa** 
+**Desarrollado con ❤️ para mejorar la experiencia educativa**

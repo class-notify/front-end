@@ -285,4 +285,4 @@ export type Notificacion = Database['public']['Tables']['notificaciones']['Row']
 export type ConfiguracionSistema = Database['public']['Tables']['configuraciones_sistema']['Row']
 
 export type ClaseCompleta = Database['public']['Views']['clases_completas']['Row']
-export type SuscripcionCompleta = Database['public']['Views']['suscripciones_completas']['Row'] 
+export type SuscripcionCompleta = Database['public']['Views']['suscripciones_completas']['Row']

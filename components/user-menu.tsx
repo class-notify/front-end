@@ -1,7 +1,7 @@
 "use client"
 
-import { LogOut, Settings, User, Shield, RotateCcw } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,72 +10,83 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { User, LogOut, Settings, Shield } from "lucide-react"
+import { useAuth, type AuthUser } from "@/hooks/use-auth"
 
 interface UserMenuProps {
-  user?: {
-    id: string
-    email: string
-    role: "admin" | "suscriptor"
-    nombre: string
-  }
+  user?: AuthUser
   onToggleRole?: () => void
 }
 
 export function UserMenu({ user, onToggleRole }: UserMenuProps) {
-  const currentUser = user || {
-    id: "1",
-    email: "admin@university.edu",
-    role: "admin" as const,
-    nombre: "Admin User",
+  const { signOut } = useAuth()
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true)
+    await signOut()
+    setIsLoggingOut(false)
   }
+
+  if (!user) return null
+
+  const initials = user.nombre
+    ? user.nombre
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+    : user.email.charAt(0).toUpperCase()
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="h-8 w-8 cursor-pointer">
-          <AvatarImage src="/placeholder.svg?height=32&width=32" alt={currentUser.nombre} />
-          <AvatarFallback>{currentUser.nombre.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-        </Avatar>
+        <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+          <Avatar className="h-10 w-10">
+            <AvatarFallback className="bg-primary/10 text-primary font-medium">{initials}</AvatarFallback>
+          </Avatar>
+        </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel>
-          <div className="flex flex-col space-y-1">
+      <DropdownMenuContent className="w-56" align="end" forceMount>
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex flex-col space-y-2">
             <div className="flex items-center gap-2">
-              {currentUser.role === "admin" ? (
-                <Shield className="h-4 w-4 text-primary" />
-              ) : (
-                <User className="h-4 w-4 text-secondary" />
-              )}
-              <div className="flex-1">
-                <p className="text-sm font-medium leading-none">{currentUser.nombre}</p>
-                <p className="text-xs leading-none text-muted-foreground">{currentUser.email}</p>
-              </div>
-              <Badge variant={currentUser.role === "admin" ? "default" : "secondary"} className="text-xs">
-                {currentUser.role === "admin" ? "Admin" : "Estudiante"}
+              <p className="text-sm font-medium leading-none">{user.nombre || "Usuario"}</p>
+              <Badge variant={user.role === "admin" ? "default" : "secondary"} className="text-xs">
+                {user.role === "admin" ? (
+                  <>
+                    <Shield className="w-3 h-3 mr-1" />
+                    Admin
+                  </>
+                ) : (
+                  <>
+                    <User className="w-3 h-3 mr-1" />
+                    Suscriptor
+                  </>
+                )}
               </Badge>
             </div>
+            <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+
+        {/* Solo mostrar toggle de rol en modo demo si existe la función */}
         {onToggleRole && (
-          <DropdownMenuItem onClick={onToggleRole}>
-            <RotateCcw className="mr-2 h-4 w-4" />
-            <span>Cambiar a {currentUser.role === "admin" ? "Vista Estudiante" : "Vista Admin"}</span>
-          </DropdownMenuItem>
+          <>
+            <DropdownMenuItem onClick={onToggleRole}>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Cambiar Rol (Demo)</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
         )}
-        <DropdownMenuItem>
-          <User className="mr-2 h-4 w-4" />
-          <span>Profile</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Settings className="mr-2 h-4 w-4" />
-          <span>Settings</span>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
+
+        <DropdownMenuItem onClick={handleLogout} disabled={isLoggingOut} className="text-red-600 focus:text-red-600">
           <LogOut className="mr-2 h-4 w-4" />
-          <span>Log out</span>
+          <span>{isLoggingOut ? "Cerrando sesión..." : "Cerrar Sesión"}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

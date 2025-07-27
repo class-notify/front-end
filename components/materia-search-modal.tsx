@@ -316,4 +316,4 @@ export function MateriaSearchModal({ open, onOpenChange, onSubscribe, suscripcio
       </DialogContent>
     </Dialog>
   )
-} 
+}

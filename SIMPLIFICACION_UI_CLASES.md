@@ -70,7 +70,7 @@ Se ha simplificado la interfaz de usuario para cargar clases, implementando las 
 
 ### 🚀 Cómo Usar
 
-```tsx
+\`\`\`tsx
 import { ScheduleFormModal } from "@/components/schedule-form-modal"
 
 // Para crear una nueva clase
@@ -88,11 +88,11 @@ import { ScheduleFormModal } from "@/components/schedule-form-modal"
   schedule={claseExistente}
   onSave={handleSaveClase}
 />
-```
+\`\`\`
 
 ### 📋 Estructura de Datos
 
-```typescript
+\`\`\`typescript
 interface ClaseFormData {
   materia_id: string
   fecha: string
@@ -101,7 +101,7 @@ interface ClaseFormData {
   aula_id: string | null
   estado: "programada" | "en_curso" | "finalizada" | "cancelada"
 }
-```
+\`\`\`
 
 ### 🎯 Beneficios
 
@@ -117,4 +117,4 @@ interface ClaseFormData {
 2. **Notificaciones**: Agregar toasts de éxito/error
 3. **Confirmación**: Diálogo de confirmación antes de guardar
 4. **Persistencia**: Guardar borradores automáticamente
-5. **Búsqueda**: Agregar búsqueda en las listas de materias y aulas 
+5. **Búsqueda**: Agregar búsqueda en las listas de materias y aulas

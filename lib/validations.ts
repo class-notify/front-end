@@ -63,4 +63,4 @@ export type ClaseFormData = z.infer<typeof claseSchema>
 export type DocenteFormData = z.infer<typeof docenteSchema>
 export type SuscripcionFormData = z.infer<typeof suscripcionSchema>
 export type UserFormData = z.infer<typeof userSchema>
-export type SearchFormData = z.infer<typeof searchSchema> 
+export type SearchFormData = z.infer<typeof searchSchema>

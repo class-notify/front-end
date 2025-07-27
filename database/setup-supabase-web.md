@@ -26,7 +26,7 @@
 
 Ejecuta esta query para verificar que todo se creó correctamente:
 
-```sql
+\`\`\`sql
 -- Verificar tablas creadas
 SELECT table_name 
 FROM information_schema.tables 
@@ -45,7 +45,7 @@ UNION ALL
 SELECT 'suscripciones', COUNT(*) FROM suscripciones
 UNION ALL
 SELECT 'notificaciones', COUNT(*) FROM notificaciones;
-```
+\`\`\`
 
 ## 🎯 Datos de Acceso de Ejemplo
 
@@ -108,4 +108,4 @@ Después de ejecutar el schema, las políticas de seguridad (RLS) estarán confi
 Si tienes problemas:
 1. Revisa los logs en el SQL Editor de Supabase
 2. Verifica la documentación de Supabase
-3. Consulta los logs de tu aplicación Next.js 
+3. Consulta los logs de tu aplicación Next.js

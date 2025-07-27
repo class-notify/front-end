@@ -137,4 +137,4 @@ export const suscripcionesService = {
 
     return materias
   }
-} 
+}

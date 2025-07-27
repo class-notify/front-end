@@ -326,4 +326,4 @@ CREATE POLICY "Solo admins pueden modificar configuraciones" ON configuraciones_
             SELECT 1 FROM usuarios 
             WHERE id = auth.uid() AND rol = 'admin'
         )
-    ); 
+    );

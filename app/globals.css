@@ -4,235 +4,224 @@
 
 @layer base {
   :root {
-    /* Design System Colors - Según README */
-    --background: 210 40% 98%; /* #F9FAFB - fondo neutro */
-    --foreground: 222 84% 5%; /* #1A202C - texto neutro */
+    /* Light mode - Aulero */
+    --background: 210 40% 98%; /* #F9FAFB */
+    --foreground: 222 84% 5%; /* #1A202C */
 
-    --card: 0 0% 100%;
+    --card: 0 0% 100%; /* White */
     --card-foreground: 222 84% 5%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 222 84% 5%;
 
-    --primary: 217 100% 50%; /* #0050FF - color primario */
-    --primary-foreground: 0 0% 100%;
+    --primary: 46 100% 64%; /* #FFD447 */
+    --primary-foreground: 222 84% 5%;
 
-    --secondary: 16 100% 57%; /* #FF5722 - color secundario */
+    --secondary: 321 100% 72%; /* #FF72E0 */
     --secondary-foreground: 0 0% 100%;
 
-    /* Muted colors con mejor contraste pero manteniendo el design system */
-    --muted: 210 40% 98%; /* #F9FAFB - fondo neutro */
-    --muted-foreground: 215 25% 35%; /* Color más oscuro para mejor contraste */
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
 
-    --accent: 210 40% 96%;
-    --accent-foreground: 222 84% 5%; /* #1A202C */
+    --accent: 210 40% 94%;
+    --accent-foreground: 222 84% 5%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 0 0% 98%;
 
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 217 100% 50%; /* #0050FF */
+    --ring: 46 100% 64%;
 
-    --radius: 0.5rem;
-
-    /* Custom status colors con mejor contraste */
-    --success: 142 76% 36%;
-    --success-foreground: 0 0% 100%;
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
-    --info: 217 100% 50%;
-    --info-foreground: 0 0% 100%;
+    --radius: 0.75rem;
   }
 
   .dark {
-    --background: 222 84% 5%; /* #1A202C - texto neutro como fondo */
-    --foreground: 210 40% 98%; /* #F9FAFB - fondo neutro como texto */
+    /* Dark mode - Aulero */
+    --background: 259 50% 10%; /* #2E1B4A */
+    --foreground: 246 50% 92%; /* #E1DFF4 */
 
-    --card: 222 84% 5%;
-    --card-foreground: 210 40% 98%;
+    --card: 255 26% 27%; /* #3A2D5F */
+    --card-foreground: 246 50% 92%;
 
-    --popover: 222 84% 5%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 255 26% 27%;
+    --popover-foreground: 246 50% 92%;
 
-    --primary: 217 100% 50%; /* #0050FF - mantener color primario */
-    --primary-foreground: 0 0% 100%;
+    --primary: 46 100% 64%; /* #FFD447 */
+    --primary-foreground: 259 50% 10%;
 
-    --secondary: 16 100% 57%; /* #FF5722 - mantener color secundario */
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 321 100% 72%; /* #FF72E0 */
+    --secondary-foreground: 259 50% 10%;
 
-    --muted: 215 25% 27%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 255 26% 22%;
+    --muted-foreground: 252 24% 65%;
 
-    --accent: 215 25% 27%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 255 26% 32%;
+    --accent-foreground: 0 0% 95%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 89% 71%;
+    --destructive-foreground: 0 0% 95%;
 
-    --border: 215 25% 27%;
-    --input: 215 25% 27%;
-    --ring: 217 100% 50%; /* #0050FF */
-
-    --success: 142 76% 36%;
-    --success-foreground: 0 0% 100%;
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
-    --info: 217 100% 50%;
-    --info-foreground: 0 0% 100%;
+    --border: 256 32% 42%; /* #5E4B8B */
+    --input: 259 50% 15%;
+    --ring: 46 100% 64%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
     font-family: "Inter", sans-serif;
-    line-height: 1.6; /* Improved line height for readability */
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
-  /* Improved focus styles for accessibility */
+  .dark body {
+    background-image: linear-gradient(135deg, #2e1b4a 0%, #4a1c8f 100%);
+    min-height: 100vh;
+  }
+
   *:focus-visible {
     @apply outline-2 outline-offset-2 outline-primary;
   }
 
-  /* Better button focus states */
   button:focus-visible {
     @apply ring-2 ring-primary ring-offset-2;
   }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.025em;
+  }
 }
 
-/* Enhanced typography hierarchy */
 @layer components {
-  .text-display {
-    @apply text-4xl font-bold tracking-tight;
+  /* Brand Typography */
+  .brand-heading {
+    @apply font-heading font-bold tracking-wide;
+    color: hsl(var(--foreground));
   }
 
-  .text-heading-1 {
-    @apply text-3xl font-bold tracking-tight;
+  .brand-text {
+    @apply text-muted-foreground leading-relaxed;
   }
 
-  .text-heading-2 {
-    @apply text-2xl font-semibold tracking-tight;
+  /* Brand Buttons */
+  .btn-brand {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-bold transition-all duration-150;
+    @apply bg-gradient-to-r from-brand-accent-yellow to-brand-accent-pink text-black;
+    @apply hover:shadow-glow-accent-hover hover:-translate-y-0.5;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+    @apply disabled:pointer-events-none disabled:opacity-50;
   }
 
-  .text-heading-3 {
-    @apply text-xl font-semibold;
+  .btn-brand-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-bold transition-all duration-150;
+    @apply border-2 border-border bg-transparent text-foreground;
+    @apply hover:bg-accent hover:text-accent-foreground;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
   }
 
-  .text-body-large {
-    @apply text-lg leading-relaxed;
+  /* Brand Cards */
+  .brand-card {
+    @apply bg-card border border-border rounded-2xl shadow-sm transition-all duration-200;
+    @apply hover:shadow-brand-card hover:-translate-y-1;
   }
 
-  .text-body {
-    @apply text-base leading-relaxed;
+  .dark .brand-card {
+    @apply bg-brand-surface/80 backdrop-blur-sm border-brand-border;
   }
 
-  .text-body-small {
-    @apply text-sm leading-relaxed;
-  }
-
-  .text-caption {
-    @apply text-xs font-medium uppercase tracking-wide;
-  }
-
-  /* Status color utilities with proper contrast */
+  /* Brand Status Badges */
   .status-success {
-    @apply bg-green-100 text-green-800 border-green-200;
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+    @apply bg-green-100 text-green-800 border border-green-200;
+  }
+
+  .dark .status-success {
+    @apply bg-green-900/20 text-green-300 border-green-800;
   }
 
   .status-warning {
-    @apply bg-amber-50 text-amber-900 border-amber-200;
-  }
-
-  .status-error {
-    @apply bg-red-100 text-red-800 border-red-200;
-  }
-
-  .status-info {
-    @apply bg-blue-100 text-blue-800 border-blue-200;
-  }
-
-  /* Dark mode status colors */
-  .dark .status-success {
-    @apply bg-green-900/20 text-green-300 border-green-800;
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+    @apply bg-amber-100 text-amber-800 border border-amber-200;
   }
 
   .dark .status-warning {
     @apply bg-amber-900/20 text-amber-200 border-amber-800;
   }
 
+  .status-error {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+    @apply bg-red-100 text-red-800 border border-red-200;
+  }
+
   .dark .status-error {
     @apply bg-red-900/20 text-red-300 border-red-800;
+  }
+
+  .status-info {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+    @apply bg-blue-100 text-blue-800 border border-blue-200;
   }
 
   .dark .status-info {
     @apply bg-blue-900/20 text-blue-300 border-blue-800;
   }
+
+  /* Icon Glow Effect */
+  .icon-glow {
+    filter: drop-shadow(0 0 8px hsl(var(--primary) / 0.6));
+  }
+
+  /* Animations */
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
 }
 
-/* Custom scrollbar with better contrast */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
+@layer utilities {
+  /* Scrollbar Styling */
+  .scrollbar-brand::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
 
-::-webkit-scrollbar-track {
-  background: hsl(var(--muted));
-}
+  .scrollbar-brand::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
 
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground));
-  border-radius: 4px;
-}
+  .scrollbar-brand::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground rounded;
+  }
 
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--primary));
-}
+  .scrollbar-brand::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary;
+  }
 
-/* Improved table styles */
-.table-container {
-  @apply border border-border rounded-lg overflow-hidden shadow-sm;
-}
+  /* Responsive breakpoints utilities */
+  .container-brand {
+    @apply mx-auto px-4;
+    max-width: 1280px;
+  }
 
-.table-header {
-  @apply bg-muted/50 border-b border-border;
-}
+  @media (min-width: 640px) {
+    .container-brand {
+      @apply px-6;
+    }
+  }
 
-.table-row {
-  @apply border-b border-border last:border-b-0 hover:bg-muted/30 transition-colors;
-}
-
-/* Enhanced card styles */
-.card-elevated {
-  @apply shadow-lg border border-border;
-}
-
-.card-interactive {
-  @apply hover:shadow-md transition-all duration-200 cursor-pointer;
-}
-
-/* Loading states */
-.loading-skeleton {
-  @apply animate-pulse bg-muted rounded;
-}
-
-/* Error states */
-.error-text {
-  @apply text-red-700 dark:text-red-400;
-}
-
-.error-border {
-  @apply border-red-500 focus:border-red-500 focus:ring-red-500;
-}
-
-/* Success states */
-.success-text {
-  @apply text-green-700 dark:text-green-400;
-}
-
-.success-border {
-  @apply border-green-500 focus:border-green-500 focus:ring-green-500;
+  @media (min-width: 1024px) {
+    .container-brand {
+      @apply px-8;
+    }
+  }
 }

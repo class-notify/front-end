@@ -136,4 +136,4 @@ INSERT INTO configuraciones_sistema (id, clave, valor, descripcion) VALUES
 -- =====================================================
 -- RESETEO DE SECUENCIAS (si es necesario)
 -- =====================================================
--- Nota: Como usamos UUIDs, no necesitamos resetear secuencias 
+-- Nota: Como usamos UUIDs, no necesitamos resetear secuencias
